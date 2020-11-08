@@ -1,6 +1,6 @@
 // Programmer: Sarah Yaw
 // Client program with added encryption
-// File name: TCPClient.java
+// File name: sye_TCPClient.java
 
 
 import java.io.*;
@@ -11,6 +11,7 @@ public class sye_TCPClient
     private static InetAddress host;
     private static String input="";
     public static boolean closing=false;
+    public static int G, N, myKey, serverKey, a;
     public static void main(String[] args)
     {
         int port = 0;
@@ -63,7 +64,6 @@ public class sye_TCPClient
                     System.out.println("Please enter a host");
                     System.exit(0);
                 }
-                
                 
                 //Get Port
                 if(hasPort)
@@ -207,8 +207,41 @@ class ServConsole extends Thread
                 response = fromServ.readLine();
                 if (response!=null)
                 {
-                    System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
-                    System.out.print("Enter message: ");
+                    if (!response.equals("initializing..."))
+                    {
+                        System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
+                        System.out.print("Enter message: ");
+                    }
+                    else 
+                    {
+                        response = fromServ.readLine();
+                        String temp[] = response.split(" ");
+                        sye_TCPClient.G = Integer.parseInt(temp[1]); //g
+                        sye_TCPClient.N = Integer.parseInt(temp[3]); //n
+
+                        sye_TCPClient.a = (int)(Math.random()*100)+1; //a
+                        sye_TCPClient.myKey = 1;
+                        for (int i = 0; i<sye_TCPClient.a; i++)
+                        {
+                            sye_TCPClient.myKey = (sye_TCPClient.G * sye_TCPClient.myKey)%sye_TCPClient.N;
+                        }
+                        UserServer.toServ.println(sye_TCPClient.myKey);//Ak
+                        UserServer.toServ.flush();
+
+                        response = fromServ.readLine();
+                        sye_TCPClient.serverKey = Integer.parseInt(response); //Bk
+
+                        response = fromServ.readLine();//SkB
+
+                        sye_TCPClient.myKey = 1;
+                        for (int i = 0; i<sye_TCPClient.a; i++)
+                        {
+                            sye_TCPClient.myKey = (sye_TCPClient.serverKey * sye_TCPClient.myKey)%sye_TCPClient.N; //SkA
+                        }
+                        //System.out.println("\rserver found: "+response+" I found: "+sye_TCPClient.myKey); 
+
+                        System.out.print("Enter message: ");
+                    }
                 }
             }
             catch(Exception e){System.out.println(e);}
@@ -219,7 +252,7 @@ class ServConsole extends Thread
 class UserServer extends Thread
 {
     private BufferedReader fromUser;
-    private PrintWriter toServ;
+    public static PrintWriter toServ;
     private String message;
     UserServer(PrintWriter pw, BufferedReader cbr)
     {

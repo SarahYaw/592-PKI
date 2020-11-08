@@ -1,5 +1,5 @@
 // Multi-threaded Server program with added encryption
-// File name: TCPServerMT.java
+// File name: sye_TCPServerMT.java
 // Programmer: Sarah Yaw
 
 
@@ -11,20 +11,91 @@ public class sye_TCPServer
 {
     //initializing the server
     private static ServerSocket servSock;
+    private static String input="";
     public static File chatLog;
     public static FileWriter log;
     public static ArrayList<ClientHandler> arr = new ArrayList<ClientHandler>();
-    public static boolean canUpdate=true;
-    public static int count;
-    public static int numMessages = 0;
+    public static boolean canUpdate=true, hasG=false, hasN=false, hasPort=false;
+    public static int count, G, N, port, gIndex, portIndex, nIndex, numMessages = 0, clientKey, b;
     public static void main(String[] args)
     {
-        //opening port, setting up object, and running forever
-        System.out.println("Opening port...\n");
         try
         {
+            if(args.length>0)
+            {
+                //check to see what command is input by user
+                for(int i=0; i<args.length;i++)
+                {
+                    if(args[i]==null)
+                        input=input+args[i];
+                    else
+                        input = input+args[i]+" ";
+                    if(args[i].equals("-g"))
+                    {
+                        hasG=true;
+                        gIndex = i+1;
+                    }
+                    if(args[i].equals("-p"))
+                    {
+                        hasPort=true;
+                        portIndex = i+1;
+                    }
+                    if(args[i].equals("-n"))
+                    {
+                        hasN=true;
+                        nIndex = i+1;
+                    }
+                    //if there is an invalid command
+                    if(!args[i].equals("-g")&&!args[i].equals("-p")&&!args[i].equals("-n")&&args[i].charAt(0)=='-')
+                    {
+                        System.out.println("Invalid command "+args[i]);
+                        System.exit(0);
+                    } 
+                }
+                    
+                // Get server IP-address
+                if(hasG)
+                {
+                    G = Integer.parseInt(args[gIndex]);
+                }
+                else
+                {
+                    G = 1019;
+                }
+                
+                
+                //Get Port
+                if(hasPort)
+                {
+                    port = Integer.parseInt(args[portIndex]);
+                }
+                else
+                {
+                    //port = 20700;
+                    System.out.println("Please enter a port");
+                    System.exit(0);
+                }
+                
+                // Get username
+                if(hasN)
+                {
+                    N = Integer.parseInt(args[nIndex]);
+                }
+                else
+                {
+                    N = 1823;
+                }
+            }
+            else if (args.length==0) //if the command line is left empty of arguments aside from running the client
+            {
+                System.out.println("Please enter the port");
+                System.exit(0);
+            }
+            System.out.println("Port: "+port+" G: "+G+" N: "+N);
             // Create a server object
-            servSock = new ServerSocket(Integer.parseInt(args[0])); 
+            servSock = new ServerSocket(port); 
+            //opening port, setting up object, and running forever
+            System.out.println("Opening port...\n");
         }
         catch(IOException e)
         {
@@ -79,7 +150,7 @@ class ClientHandler extends Thread
     private String user;
     private BufferedReader in;
     public PrintWriter out;
-    public int index;
+    public int index, myKey;
     public Object lock;
     private static long start, finish;
     public ClientHandler(Socket s, String name)
@@ -98,6 +169,30 @@ class ClientHandler extends Thread
             // Set up input and output streams for socket
             this.in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
             this.out = new PrintWriter(client.getOutputStream(),true); 
+
+            //send G and N to client
+            this.out.println("initializing...");
+            this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
+            this.out.flush();
+
+            int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
+
+            sye_TCPServer.b = (int)(Math.random()*100)+1; //b
+            myKey = 1;
+            for (int i = 0; i<sye_TCPServer.b; i++)
+            {
+                myKey = (sye_TCPServer.G * myKey)%sye_TCPServer.N; //Bk
+            } 
+            this.out.println(myKey);
+            this.out.flush();
+
+            myKey = 1;
+            for (int i = 0; i<sye_TCPServer.b; i++)
+            {
+                myKey = (clientKey * myKey)%sye_TCPServer.N; //SKB
+            }
+            this.out.println(myKey);
+            this.out.flush();
         }
         catch(IOException e){ e.printStackTrace(); }
     }
