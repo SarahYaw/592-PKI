@@ -209,6 +209,7 @@ class ServConsole extends Thread
                 {
                     if (!response.equals("initializing..."))
                     {
+                        //decrypt server message here
                         System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
                         System.out.print("Enter message: ");
                     }
@@ -219,7 +220,7 @@ class ServConsole extends Thread
                         sye_TCPClient.G = Integer.parseInt(temp[1]); //g
                         sye_TCPClient.N = Integer.parseInt(temp[3]); //n
 
-                        sye_TCPClient.a = (int)(Math.random()*100)+1; //a
+                        sye_TCPClient.a = (int)(Math.random()*100)+100; //a
                         sye_TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
@@ -238,9 +239,8 @@ class ServConsole extends Thread
                         {
                             sye_TCPClient.myKey = (sye_TCPClient.serverKey * sye_TCPClient.myKey)%sye_TCPClient.N; //SkA
                         }
-                        //System.out.println("\rserver found: "+response+" I found: "+sye_TCPClient.myKey); 
+                        System.out.println("\rG: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N+"; Key: "+sye_TCPClient.myKey); 
 
-                        System.out.print("Enter message: ");
                     }
                 }
             }
@@ -253,7 +253,7 @@ class UserServer extends Thread
 {
     private BufferedReader fromUser;
     public static PrintWriter toServ;
-    private String message;
+    private String message, padd, bin, word;
     UserServer(PrintWriter pw, BufferedReader cbr)
     {
         fromUser=cbr;
@@ -262,14 +262,24 @@ class UserServer extends Thread
     @Override
     public void run()
     {
+        try{ while(sye_TCPClient.myKey==0){this.sleep(5);} }catch(Exception e){e.printStackTrace();}
+        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
+        System.out.print("byte: "+padd);
+        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
+        System.out.println("; padd: "+padd);
         // Get data from the user and send it to the server
         do
         {
             try
             {
+                bin="";
                 System.out.print("Enter message: ");
                 message = fromUser.readLine();
-                toServ.println(message);
+                String output="";
+                for (int i = 0; i<message.length(); i++)
+                    output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";//).replace(' ', '0');//Integer.toBinaryString(Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd))).replace(' ', '0')+" ";
+                
+                toServ.println(output);
             }
             catch(Exception e){System.out.println(e);}
         }while (!message.equals("DONE"));

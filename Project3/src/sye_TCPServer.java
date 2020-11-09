@@ -147,7 +147,7 @@ public class sye_TCPServer
 class ClientHandler extends Thread
 {
     private Socket client;
-    private String user;
+    private String user, padd;
     private BufferedReader in;
     public PrintWriter out;
     public int index, myKey;
@@ -177,7 +177,7 @@ class ClientHandler extends Thread
 
             int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
 
-            sye_TCPServer.b = (int)(Math.random()*100)+1; //b
+            sye_TCPServer.b = (int)(Math.random()*100)+100; //b
             myKey = 1;
             for (int i = 0; i<sye_TCPServer.b; i++)
             {
@@ -234,7 +234,26 @@ class ClientHandler extends Thread
         // Receive and process the incoming data 
         try
         {
-            String message = this.in.readLine(); 
+            padd = String.format("%8s",Integer.toBinaryString(myKey)).replace(' ', '0');
+            System.out.print("byte: "+padd);
+            padd = String.format("%8s",Integer.toBinaryString(myKey & 255)).replace(' ', '0');
+            System.out.println("; padd: "+padd);
+
+            String message = this.in.readLine();
+            String inp="";
+            int parseInt;
+            String temo[] = message.split(" ");
+            char c;
+            for (int i = 0; i<temo.length;i++)
+            {
+                if(!temo[i].equals(""))
+                {
+                    parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(padd,2);
+                    c = (char)parseInt;
+                    inp+=c;
+                }
+            }
+            message = inp;
             while (!message.equals("DONE"))
             {
                 while(!sye_TCPServer.canUpdate)
@@ -258,6 +277,9 @@ class ClientHandler extends Thread
                 sye_TCPServer.canUpdate=true;
                 synchronized(this.lock){this.lock.notifyAll();}
 
+                //encrypt broadcast here
+
+
                 //cycle and broadcast input to !this.out
                 for(int i=0; i<sye_TCPServer.arr.size();i++)
                 {
@@ -269,6 +291,19 @@ class ClientHandler extends Thread
                     }
                 }
                 message = this.in.readLine();
+
+                inp="";
+                String temo2[] = message.split(" ");
+                for (int i = 0; i<temo2.length;i++)
+                {
+                    if(!temo2[i].equals(""))
+                    {
+                        parseInt = Integer.valueOf(temo2[i]) ^ Integer.parseInt(padd,2);
+                        c = (char)parseInt;
+                        inp+=c;
+                    }
+                }
+                message = inp;
             }
             //client has said they're done
 
