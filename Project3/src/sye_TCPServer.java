@@ -157,7 +157,7 @@ class ClientHandler extends Thread
     {
         // set up the socket
         client = s;
-        user=name;
+        user = name;
         this.index=sye_TCPServer.count;
         sye_TCPServer.count++;
         lock = new Object();
@@ -171,18 +171,22 @@ class ClientHandler extends Thread
             this.out = new PrintWriter(client.getOutputStream(),true); 
 
             //send G and N to client
+            //System.out.println("initializing...");
             this.out.println("initializing...");
             this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
             this.out.flush();
 
             int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
+            //System.out.println("clientKey "+clientKey);
 
             sye_TCPServer.b = (int)(Math.random()*100)+100; //b
+            //System.out.println("sye_TCPServer.b "+sye_TCPServer.b);
             myKey = 1;
             for (int i = 0; i<sye_TCPServer.b; i++)
             {
                 myKey = (sye_TCPServer.G * myKey)%sye_TCPServer.N; //Bk
             } 
+            //System.out.println("myKey "+myKey);
             this.out.println(myKey);
             this.out.flush();
 
@@ -193,8 +197,41 @@ class ClientHandler extends Thread
             }
             this.out.println(myKey);
             this.out.flush();
+
+            this.padd = String.format("%8s",Integer.toBinaryString(myKey)).replace(' ', '0');
+            System.out.print("byte: "+padd);
+            this.padd = String.format("%8s",Integer.toBinaryString(myKey & 255)).replace(' ', '0');
+            System.out.println("; padd: "+padd);
         }
         catch(IOException e){ e.printStackTrace(); }
+    }
+
+    public String encrypt(String message, String padd)
+    {
+        String bin="";
+        String output="";
+        for (int i = 0; i<message.length(); i++)
+            output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(this.padd,2))+" ";
+        return output;
+    }
+
+    public String decrypt(String message, String padd)
+    {
+        //decryption
+        String inp="";
+        int parseInt;
+        String temo[] = message.split(" ");
+        char c;
+        for (int i = 0; i<temo.length;i++)
+        {
+            if(!temo[i].equals(""))
+            {
+                parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(this.padd,2);
+                c = (char)parseInt;
+                inp+=c;
+            }
+        }
+        return inp;
     }
 
     // overwrite the method 'run' of the Runnable interface
@@ -234,26 +271,8 @@ class ClientHandler extends Thread
         // Receive and process the incoming data 
         try
         {
-            padd = String.format("%8s",Integer.toBinaryString(myKey)).replace(' ', '0');
-            System.out.print("byte: "+padd);
-            padd = String.format("%8s",Integer.toBinaryString(myKey & 255)).replace(' ', '0');
-            System.out.println("; padd: "+padd);
-
             String message = this.in.readLine();
-            String inp="";
-            int parseInt;
-            String temo[] = message.split(" ");
-            char c;
-            for (int i = 0; i<temo.length;i++)
-            {
-                if(!temo[i].equals(""))
-                {
-                    parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(padd,2);
-                    c = (char)parseInt;
-                    inp+=c;
-                }
-            }
-            message = inp;
+            //message = decrypt(message, padd);
             while (!message.equals("DONE"))
             {
                 while(!sye_TCPServer.canUpdate)
@@ -279,7 +298,6 @@ class ClientHandler extends Thread
 
                 //encrypt broadcast here
 
-
                 //cycle and broadcast input to !this.out
                 for(int i=0; i<sye_TCPServer.arr.size();i++)
                 {
@@ -291,19 +309,6 @@ class ClientHandler extends Thread
                     }
                 }
                 message = this.in.readLine();
-
-                inp="";
-                String temo2[] = message.split(" ");
-                for (int i = 0; i<temo2.length;i++)
-                {
-                    if(!temo2[i].equals(""))
-                    {
-                        parseInt = Integer.valueOf(temo2[i]) ^ Integer.parseInt(padd,2);
-                        c = (char)parseInt;
-                        inp+=c;
-                    }
-                }
-                message = inp;
             }
             //client has said they're done
 

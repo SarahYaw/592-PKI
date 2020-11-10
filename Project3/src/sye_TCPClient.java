@@ -92,11 +92,8 @@ public class sye_TCPClient
             {
                 System.out.println("Please enter the host, port, and username");
                 System.exit(0);
-                //host
                 //host = InetAddress.getLocalHost();
-                //port
                 //port = 20700;
-                //username
                 //System.out.print("Please enter a username: ");
                 //user = keyb.next();
             }
@@ -196,6 +193,26 @@ class ServConsole extends Thread
     {
         fromServ=sbr;
     }
+
+    public String decrypt(String message, String padd)
+    {
+        //decryption
+        String inp="";
+        int parseInt;
+        String temo[] = message.split(" ");
+        char c;
+        for (int i = 0; i<temo.length;i++)
+        {
+            if(!temo[i].equals(""))
+            {
+                parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(padd);
+                c = (char)parseInt;
+                inp+=c;
+            }
+        }
+        return inp;
+    }
+
     @Override
     public void run()
     {
@@ -213,20 +230,24 @@ class ServConsole extends Thread
                         System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
                         System.out.print("Enter message: ");
                     }
-                    else 
+                    else //this runs as soon as it connects to the server
                     {
+                        //System.out.println("initializing...");
                         response = fromServ.readLine();
                         String temp[] = response.split(" ");
                         sye_TCPClient.G = Integer.parseInt(temp[1]); //g
                         sye_TCPClient.N = Integer.parseInt(temp[3]); //n
+                        //System.out.println("recieved G and N");
 
                         sye_TCPClient.a = (int)(Math.random()*100)+100; //a
+                        //System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
                         sye_TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
                             sye_TCPClient.myKey = (sye_TCPClient.G * sye_TCPClient.myKey)%sye_TCPClient.N;
                         }
                         UserServer.toServ.println(sye_TCPClient.myKey);//Ak
+                        //System.out.println("sye_TCPClient.myKey "+sye_TCPClient.myKey);
                         UserServer.toServ.flush();
 
                         response = fromServ.readLine();
@@ -241,6 +262,12 @@ class ServConsole extends Thread
                         }
                         System.out.println("\rG: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N+"; Key: "+sye_TCPClient.myKey); 
 
+                        String padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
+                        System.out.print("byte: "+padd);
+                        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
+                        System.out.println("; padd: "+padd);
+
+                        System.out.print("Enter message: ");
                     }
                 }
             }
@@ -258,28 +285,34 @@ class UserServer extends Thread
     {
         fromUser=cbr;
         toServ=pw;
-    }
-    @Override
-    public void run()
-    {
-        try{ while(sye_TCPClient.myKey==0){this.sleep(5);} }catch(Exception e){e.printStackTrace();}
+
         padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
         System.out.print("byte: "+padd);
         padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
         System.out.println("; padd: "+padd);
+    }
+    
+    public String encrypt(String message, String padd)
+    {
+        bin="";
+        String output="";
+        for (int i = 0; i<message.length(); i++)
+            output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";
+        return output;
+    }
+
+    @Override
+    public void run()
+    {
         // Get data from the user and send it to the server
         do
         {
             try
             {
-                bin="";
+                //encryption
                 System.out.print("Enter message: ");
                 message = fromUser.readLine();
-                String output="";
-                for (int i = 0; i<message.length(); i++)
-                    output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";//).replace(' ', '0');//Integer.toBinaryString(Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd))).replace(' ', '0')+" ";
-                
-                toServ.println(output);
+                toServ.println(message);//(encrypt(message, padd));
             }
             catch(Exception e){System.out.println(e);}
         }while (!message.equals("DONE"));
