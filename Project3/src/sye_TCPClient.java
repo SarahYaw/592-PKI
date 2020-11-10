@@ -2,7 +2,6 @@
 // Client program with added encryption
 // File name: sye_TCPClient.java
 
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -150,7 +149,8 @@ public class sye_TCPClient
 
             // Receive the final report and close the connection
             message = in.readLine();
-            response = message;
+//decrypt
+            response = ServConsole.decrypt(message, ServConsole.padd);;
             System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
             do
             {
@@ -158,10 +158,11 @@ public class sye_TCPClient
                 if (message==null){}
                 else
                 {
-                    response = message;
+//decrypt
+                    response = ServConsole.decrypt(message, ServConsole.padd);;
                     System.out.println(response);
                 }
-            }while(message!=null && !message.substring(0,3).equals("Serve"));
+            }while(response!=null && !response.substring(0,3).equals("Serve"));
         }
         catch(IOException e)
         {
@@ -189,14 +190,14 @@ class ServConsole extends Thread
     private BufferedReader fromServ;
     //console output is system.out
     private String response;
+    public static String padd;
     public ServConsole(BufferedReader sbr)
     {
         fromServ=sbr;
     }
 
-    public String decrypt(String message, String padd)
+    public static String decrypt(String message, String pad)
     {
-        //decryption
         String inp="";
         int parseInt;
         String temo[] = message.split(" ");
@@ -205,7 +206,7 @@ class ServConsole extends Thread
         {
             if(!temo[i].equals(""))
             {
-                parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(padd);
+                parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(pad,2);
                 c = (char)parseInt;
                 inp+=c;
             }
@@ -226,28 +227,29 @@ class ServConsole extends Thread
                 {
                     if (!response.equals("initializing..."))
                     {
-                        //decrypt server message here
+//decrypt               
+                        response = decrypt(response, padd);
                         System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
                         System.out.print("Enter message: ");
                     }
                     else //this runs as soon as it connects to the server
                     {
-                        //System.out.println("initializing...");
+                    //System.out.println("initializing...");
                         response = fromServ.readLine();
                         String temp[] = response.split(" ");
                         sye_TCPClient.G = Integer.parseInt(temp[1]); //g
                         sye_TCPClient.N = Integer.parseInt(temp[3]); //n
-                        //System.out.println("recieved G and N");
+                    //System.out.println("recieved G and N");
 
                         sye_TCPClient.a = (int)(Math.random()*100)+100; //a
-                        //System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
+                            System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
                         sye_TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
                             sye_TCPClient.myKey = (sye_TCPClient.G * sye_TCPClient.myKey)%sye_TCPClient.N;
                         }
                         UserServer.toServ.println(sye_TCPClient.myKey);//Ak
-                        //System.out.println("sye_TCPClient.myKey "+sye_TCPClient.myKey);
+                    //System.out.println("sye_TCPClient.myKey "+sye_TCPClient.myKey);
                         UserServer.toServ.flush();
 
                         response = fromServ.readLine();
@@ -262,7 +264,7 @@ class ServConsole extends Thread
                         }
                         System.out.println("\rG: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N+"; Key: "+sye_TCPClient.myKey); 
 
-                        String padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
+                        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
                         System.out.print("byte: "+padd);
                         padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
                         System.out.println("; padd: "+padd);
@@ -280,16 +282,11 @@ class UserServer extends Thread
 {
     private BufferedReader fromUser;
     public static PrintWriter toServ;
-    private String message, padd, bin, word;
+    private String message, padd=ServConsole.padd, bin, word;
     UserServer(PrintWriter pw, BufferedReader cbr)
     {
         fromUser=cbr;
         toServ=pw;
-
-        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
-        System.out.print("byte: "+padd);
-        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
-        System.out.println("; padd: "+padd);
     }
     
     public String encrypt(String message, String padd)
@@ -297,7 +294,7 @@ class UserServer extends Thread
         bin="";
         String output="";
         for (int i = 0; i<message.length(); i++)
-            output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";
+            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";
         return output;
     }
 
@@ -309,10 +306,10 @@ class UserServer extends Thread
         {
             try
             {
-                //encryption
                 System.out.print("Enter message: ");
                 message = fromUser.readLine();
-                toServ.println(message);//(encrypt(message, padd));
+//encrypt 
+                toServ.println(encrypt(message,ServConsole.padd));
             }
             catch(Exception e){System.out.println(e);}
         }while (!message.equals("DONE"));

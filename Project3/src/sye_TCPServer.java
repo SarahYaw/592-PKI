@@ -2,7 +2,6 @@
 // File name: sye_TCPServerMT.java
 // Programmer: Sarah Yaw
 
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -171,22 +170,22 @@ class ClientHandler extends Thread
             this.out = new PrintWriter(client.getOutputStream(),true); 
 
             //send G and N to client
-            //System.out.println("initializing...");
+        //System.out.println("initializing...");
             this.out.println("initializing...");
             this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
             this.out.flush();
 
             int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
-            //System.out.println("clientKey "+clientKey);
+        //System.out.println("clientKey "+clientKey);
 
             sye_TCPServer.b = (int)(Math.random()*100)+100; //b
-            //System.out.println("sye_TCPServer.b "+sye_TCPServer.b);
+        //System.out.println("sye_TCPServer.b "+sye_TCPServer.b);
             myKey = 1;
             for (int i = 0; i<sye_TCPServer.b; i++)
             {
                 myKey = (sye_TCPServer.G * myKey)%sye_TCPServer.N; //Bk
             } 
-            //System.out.println("myKey "+myKey);
+        //System.out.println("myKey "+myKey);
             this.out.println(myKey);
             this.out.flush();
 
@@ -211,13 +210,12 @@ class ClientHandler extends Thread
         String bin="";
         String output="";
         for (int i = 0; i<message.length(); i++)
-            output+=String.format("%8s", Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(this.padd,2))+" ";
+            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";
         return output;
     }
 
     public String decrypt(String message, String padd)
     {
-        //decryption
         String inp="";
         int parseInt;
         String temo[] = message.split(" ");
@@ -226,7 +224,7 @@ class ClientHandler extends Thread
         {
             if(!temo[i].equals(""))
             {
-                parseInt = Integer.valueOf(temo[i]) ^ Integer.parseInt(this.padd,2);
+                parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(this.padd,2);
                 c = (char)parseInt;
                 inp+=c;
             }
@@ -246,8 +244,9 @@ class ClientHandler extends Thread
             String log;
             while(backlog.hasNextLine())
             {
+//encrypt
                 log = backlog.nextLine();
-                this.out.println(log);
+                this.out.println(encrypt(log, this.padd));
                 this.out.flush();
             }   
             
@@ -257,7 +256,8 @@ class ClientHandler extends Thread
                 ClientHandler temp = sye_TCPServer.arr.get(i);
                 if(temp.index!=this.index)
                 {
-                    temp.out.println(user + " has joined the chat!");
+//encrypt
+                    temp.out.println(encrypt(user + " has joined the chat!", temp.padd));
                     temp.out.flush();
                 }
             }
@@ -272,7 +272,8 @@ class ClientHandler extends Thread
         try
         {
             String message = this.in.readLine();
-            //message = decrypt(message, padd);
+//decrypt
+            message = decrypt(message, this.padd);
             while (!message.equals("DONE"))
             {
                 while(!sye_TCPServer.canUpdate)
@@ -296,33 +297,36 @@ class ClientHandler extends Thread
                 sye_TCPServer.canUpdate=true;
                 synchronized(this.lock){this.lock.notifyAll();}
 
-                //encrypt broadcast here
-
                 //cycle and broadcast input to !this.out
                 for(int i=0; i<sye_TCPServer.arr.size();i++)
                 {
                     ClientHandler temp = sye_TCPServer.arr.get(i);
                     if(temp.index!=this.index)
                     {
-                        temp.out.print(user + ": "+ message+"\n");   //broadcasting back
+//encrypt
+                        temp.out.print(encrypt(user + ": "+ message+"\n", temp.padd));   //broadcasting back
                         temp.out.flush();
                     }
                 }
                 message = this.in.readLine();
+//decrypt
+                message = decrypt(message, this.padd);
             }
             //client has said they're done
-
+//encrypt
             // Send a report back and close the connection
-            this.out.println("--Information Received From the Server--");
+            this.out.println(encrypt("--Information Received From the Server--", this.padd));
             this.out.flush();
             Scanner file = new Scanner(sye_TCPServer.chatLog);
             while(file.hasNextLine())
             {
                 message = file.nextLine();
-                this.out.println(message);
+//encrypt
+                this.out.println(encrypt(message, this.padd));
                 this.out.flush();
             }
-            this.out.println("Server received " + sye_TCPServer.numMessages + " messages total");
+//encrypt
+            this.out.println(encrypt("Server received " + sye_TCPServer.numMessages + " messages total", this.padd));
             this.out.flush();
  
             //get the end value of timer
@@ -335,7 +339,8 @@ class ClientHandler extends Thread
                 seconds=Math.floor(val/(1*Math.pow(10, 9)));
                 val=val%(1*Math.pow(10, 9));
                 milliseconds=Math.floor(val/(1*Math.pow(10, 6)));
-            this.out.println("Length of session: "+(int)hours+"::"+(int)minutes+"::"+(int)seconds+"::"+(int)milliseconds);
+//encrypt
+            this.out.println(encrypt("Length of session: "+(int)hours+"::"+(int)minutes+"::"+(int)seconds+"::"+(int)milliseconds, this.padd));
             this.out.flush();
 
             //departure announcement to remaining clients
@@ -344,7 +349,8 @@ class ClientHandler extends Thread
                 ClientHandler temp = sye_TCPServer.arr.get(i);
                 if(temp.index!=this.index)
                 {
-                    temp.out.println(user + " has left the chat.");
+//encrypt
+                    temp.out.println(encrypt(user + " has left the chat.", temp.padd));
                     temp.out.flush();
                 }
             }
