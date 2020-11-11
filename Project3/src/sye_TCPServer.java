@@ -94,7 +94,7 @@ public class sye_TCPServer
             // Create a server object
             servSock = new ServerSocket(port); 
             //opening port, setting up object, and running forever
-            System.out.println("Opening port...\n");
+            System.out.println("Opening port...");
         }
         catch(IOException e)
         {
@@ -210,7 +210,8 @@ class ClientHandler extends Thread
         String bin="";
         String output="";
         for (int i = 0; i<message.length(); i++)
-            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";
+            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";           //encryption
+        //System.out.println(output);
         return output;
     }
 
@@ -293,6 +294,7 @@ class ClientHandler extends Thread
                 sye_TCPServer.log.write(user + ": "+ message+"\n");
                 sye_TCPServer.log.flush();
                 sye_TCPServer.numMessages ++;
+
                 //end of synchronization
                 sye_TCPServer.canUpdate=true;
                 synchronized(this.lock){this.lock.notifyAll();}
@@ -304,8 +306,11 @@ class ClientHandler extends Thread
                     if(temp.index!=this.index)
                     {
 //encrypt
-                        temp.out.print(encrypt(user + ": "+ message+"\n", temp.padd));   //broadcasting back
-                        temp.out.flush();
+                        message= encrypt(user + ": "+ message, temp.padd);   //encrypted
+                        //message = user + ": "+ message+"\n";                      //not encrypted
+                        //System.out.println(" "+" "+ " "+message+" "+" "+" "+temp.out);
+                        temp.out.println(message);                                            //broadcasting back
+                        temp.out.flush();//ERROR
                     }
                 }
                 message = this.in.readLine();

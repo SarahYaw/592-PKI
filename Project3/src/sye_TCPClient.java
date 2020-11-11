@@ -147,10 +147,11 @@ public class sye_TCPClient
                 System.out.println(e);
             }
 
-            // Receive the final report and close the connection
+            //Receive the final report and close the connection
+    //System.out.println("\rCLOSING REPORT");
             message = in.readLine();
 //decrypt
-            response = ServConsole.decrypt(message, ServConsole.padd);;
+            response = ServConsole.decrypt(message, ServConsole.padd);
             System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
             do
             {
@@ -159,10 +160,12 @@ public class sye_TCPClient
                 else
                 {
 //decrypt
-                    response = ServConsole.decrypt(message, ServConsole.padd);;
-                    System.out.println(response);
+                    message = ServConsole.decrypt(message, ServConsole.padd);
+                    System.out.println(message);
                 }
-            }while(response!=null && !response.substring(0,3).equals("Serve"));
+            }while(message!=null && !message.substring(0,3).equals("Serv"));
+    //System.out.println("CLOSING REPORT FINISHED");
+
         }
         catch(IOException e)
         {
@@ -223,13 +226,14 @@ class ServConsole extends Thread
             try
             {
                 response = fromServ.readLine();
+            //System.out.println("\rLISTENING -----------");
                 if (response!=null)
-                {
+                {         //the client isnt listening for some reason here
                     if (!response.equals("initializing..."))
                     {
 //decrypt               
                         response = decrypt(response, padd);
-                        System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
+                        System.out.println("\r"+response+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" "+" ");
                         System.out.print("Enter message: ");
                     }
                     else //this runs as soon as it connects to the server
@@ -242,7 +246,7 @@ class ServConsole extends Thread
                     //System.out.println("recieved G and N");
 
                         sye_TCPClient.a = (int)(Math.random()*100)+100; //a
-                            System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
+                    //System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
                         sye_TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
@@ -274,8 +278,7 @@ class ServConsole extends Thread
                 }
             }
             catch(Exception e){System.out.println(e);}
-        }
-        
+        }//System.out.println("\rEXITED MAIN LISTENING LOOP");
     }
 }
 class UserServer extends Thread
