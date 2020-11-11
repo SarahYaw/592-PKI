@@ -243,17 +243,15 @@ class ServConsole extends Thread
                         String temp[] = response.split(" ");
                         sye_TCPClient.G = Integer.parseInt(temp[1]); //g
                         sye_TCPClient.N = Integer.parseInt(temp[3]); //n
-                    //System.out.println("recieved G and N");
+                        System.out.print("G: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N);
 
                         sye_TCPClient.a = (int)(Math.random()*100)+100; //a
-                    //System.out.println("sye_TCPClient.a "+sye_TCPClient.a);
                         sye_TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
                             sye_TCPClient.myKey = (sye_TCPClient.G * sye_TCPClient.myKey)%sye_TCPClient.N;
                         }
                         UserServer.toServ.println(sye_TCPClient.myKey);//Ak
-                    //System.out.println("sye_TCPClient.myKey "+sye_TCPClient.myKey);
                         UserServer.toServ.flush();
 
                         response = fromServ.readLine();
@@ -266,12 +264,10 @@ class ServConsole extends Thread
                         {
                             sye_TCPClient.myKey = (sye_TCPClient.serverKey * sye_TCPClient.myKey)%sye_TCPClient.N; //SkA
                         }
-                        System.out.println("\rG: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N+"; Key: "+sye_TCPClient.myKey); 
+                        System.out.print("; Session-Key: "+sye_TCPClient.myKey);
 
-                        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey)).replace(' ', '0');
-                        System.out.print("byte: "+padd);
                         padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
-                        System.out.println("; padd: "+padd);
+                        System.out.println("; padd: "+padd);    
 
                         System.out.print("Enter message: ");
                     }

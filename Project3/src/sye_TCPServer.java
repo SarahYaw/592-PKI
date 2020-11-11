@@ -90,7 +90,6 @@ public class sye_TCPServer
                 System.out.println("Please enter the port");
                 System.exit(0);
             }
-            System.out.println("Port: "+port+" G: "+G+" N: "+N);
             // Create a server object
             servSock = new ServerSocket(port); 
             //opening port, setting up object, and running forever
@@ -170,22 +169,19 @@ class ClientHandler extends Thread
             this.out = new PrintWriter(client.getOutputStream(),true); 
 
             //send G and N to client
-        //System.out.println("initializing...");
             this.out.println("initializing...");
             this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
             this.out.flush();
+            System.out.print("G: "+sye_TCPServer.G+"; N: "+sye_TCPServer.N);
 
             int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
-        //System.out.println("clientKey "+clientKey);
 
             sye_TCPServer.b = (int)(Math.random()*100)+100; //b
-        //System.out.println("sye_TCPServer.b "+sye_TCPServer.b);
             myKey = 1;
             for (int i = 0; i<sye_TCPServer.b; i++)
             {
                 myKey = (sye_TCPServer.G * myKey)%sye_TCPServer.N; //Bk
             } 
-        //System.out.println("myKey "+myKey);
             this.out.println(myKey);
             this.out.flush();
 
@@ -194,13 +190,13 @@ class ClientHandler extends Thread
             {
                 myKey = (clientKey * myKey)%sye_TCPServer.N; //SKB
             }
+            System.out.print("; Session-Key: "+myKey);
             this.out.println(myKey);
             this.out.flush();
 
-            this.padd = String.format("%8s",Integer.toBinaryString(myKey)).replace(' ', '0');
-            System.out.print("byte: "+padd);
             this.padd = String.format("%8s",Integer.toBinaryString(myKey & 255)).replace(' ', '0');
-            System.out.println("; padd: "+padd);
+            System.out.println("; padd: "+padd);    
+
         }
         catch(IOException e){ e.printStackTrace(); }
     }
@@ -210,8 +206,7 @@ class ClientHandler extends Thread
         String bin="";
         String output="";
         for (int i = 0; i<message.length(); i++)
-            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" ";           //encryption
-        //System.out.println(output);
+            output+= (Integer.valueOf(message.charAt(i)) ^ Integer.parseInt(padd,2))+" "; 
         return output;
     }
 
@@ -306,10 +301,8 @@ class ClientHandler extends Thread
                     if(temp.index!=this.index)
                     {
 //encrypt
-                        message= encrypt(user + ": "+ message, temp.padd);   //encrypted
-                        //message = user + ": "+ message+"\n";                      //not encrypted
-                        //System.out.println(" "+" "+ " "+message+" "+" "+" "+temp.out);
-                        temp.out.println(message);                                            //broadcasting back
+                        message= encrypt(user + ": "+ message, temp.padd);
+                        temp.out.println(message);//broadcasting back
                         temp.out.flush();//ERROR
                     }
                 }
