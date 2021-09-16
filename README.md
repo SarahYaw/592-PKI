@@ -1,7 +1,7 @@
-Creator: Sarah Yaw
+Creators: Sarah Yaw, Brian U., Payton S., Yu Z., Fatema C., and Jason I.
 
 Project Description:
-  Multithreaded client and server programs with encryption. The server is able to support multiple clients coming and going. As long as there is at least one client, the server will update any incoming clients to the chats that happened before that specific arrival. The server will broadcast arrivals and departures of clients as well as their messages.
+  This will soon be a rough PKI infrastructure for out Cybersecurity class at EMU.
 
 Run Instructions:
   1)  Open up the terminal window.
@@ -25,8 +25,16 @@ Run Instructions:
   9)  You are now connected to the server and should be able to interact with it. Send whatever messages you want by typing them in and hitting enter to send.
   10) To disconnect form the server type in "DONE" and hit enter. This must be its own message.'
 
-Conclusion: 
-  I estimate this took 36 hours to complete. I started this project on the 8th, but naturally when it rains it pours and that weekend and a bit into the week had given me a pain flare that again, extended my work time. The implementation was not too bad actually. The most difficult part was making sure the correct keys were sent to the encryption and decryption methods.
-  The most difficult part for me was getting the encrypted message to flush from the server to broadcast out. I don't know why it took so long for me to realize that I needed to use println instead of print before the flush, but I swear that took up at least the last third of the time i spent on this trying to figure out what went wrong.
-  I'm happy to report that my program works really well! Each project building on this makes me so excited that I've actually built a good chunk of an actual chat program.
-  I think this assignment worked out pretty well. I don't really have any changes I would make. 
+Credits:
+
+  Sarah Yaw - base code. 
+  
+  Brian U. - 
+  
+  Payton S. - 
+  
+  Yu Z. - 
+  
+  Fatema C. - 
+  
+  Jason I. - 
