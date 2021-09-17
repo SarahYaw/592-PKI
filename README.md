@@ -1,4 +1,4 @@
-Creators: Sarah Yaw, Brian U., Payton S., Yu Z., Fatema C., and Jason I.
+Creators: Sarah Yaw, @bpurbancic , Payton S., Yu Z., Fatema C., and Jason I.
 
 Project Description:
   This will soon be a rough PKI infrastructure for out Cybersecurity class at EMU.
@@ -29,7 +29,7 @@ Credits:
 
   Sarah Yaw - base code. 
   
-  Brian U. - 
+  @bpurbancic - 
   
   Payton S. - 
   
