@@ -1,5 +1,5 @@
 // Multi-threaded Server program with added encryption
-// File name: sye_TCPServerMT.java
+// File name: sye_TCPServer.java
 // Programmer: Sarah Yaw
 
 import java.io.*;
@@ -210,7 +210,7 @@ class ClientHandler extends Thread
         return output;
     }
 
-    public String decrypt(String message, String padd)
+    public String decrypt(String message, String pad)
     {
         String inp="";
         int parseInt;
@@ -220,7 +220,7 @@ class ClientHandler extends Thread
         {
             if(!temo[i].equals(""))
             {
-                parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(this.padd,2);
+                parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(pad,2);
                 c = (char)parseInt;
                 inp+=c;
             }
@@ -269,9 +269,10 @@ class ClientHandler extends Thread
         {
             String message = this.in.readLine();
 //decrypt
-            message = decrypt(message, this.padd);
+            message = decrypt( message, this.padd); //added user
             while (!message.equals("DONE"))
             {
+                message = user +": "+ message;
                 while(!sye_TCPServer.canUpdate)
                 {
                     //synchronization to prevent collisions between two clients posting at once
@@ -285,8 +286,8 @@ class ClientHandler extends Thread
                     }   
                 }
                 sye_TCPServer.canUpdate=false;   
-                System.out.println(user + ": "+ message);
-                sye_TCPServer.log.write(user + ": "+ message+"\n");
+                System.out.println(message);
+                sye_TCPServer.log.write(message+"\n");
                 sye_TCPServer.log.flush();
                 sye_TCPServer.numMessages ++;
 
@@ -297,13 +298,19 @@ class ClientHandler extends Thread
                 //cycle and broadcast input to !this.out
                 for(int i=0; i<sye_TCPServer.arr.size();i++)
                 {
+                    
                     ClientHandler temp = sye_TCPServer.arr.get(i);
                     if(temp.index!=this.index)
                     {
 //encrypt
-                        message= encrypt(user + ": "+ message, temp.padd);
+                //System.out.println(user + ": "+ message+"; padd: "+Integer.parseInt(temp.padd, 2)+"; before enc");//debug
+                        message = encrypt(message, temp.padd);//og tag site +"(to:"+Integer.parseInt(temp.padd, 2)+", frm:"+Integer.parseInt(this.padd, 2)+")"
+                //System.out.println(user + ": "+ message+"; padd: "+Integer.parseInt(temp.padd, 2)+"; after enc");//debug
                         temp.out.println(message);//broadcasting back
                         temp.out.flush();//ERROR
+                        
+                        message = decrypt(message, temp.padd);//debug
+                //System.out.println(user + ": "+ message+"; padd: "+Integer.parseInt(temp.padd, 2)+"; after dec");//debug
                     }
                 }
                 message = this.in.readLine();
