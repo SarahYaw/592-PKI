@@ -1,4 +1,4 @@
-Creators: Sarah Yaw, [@bpurbancic](https://github.com/bpurbancic), Payton S., Yu Z., Fatema C., and Jason I.
+Creators: Sarah Yaw, [@bpurbancic](https://github.com/bpurbancic), [@PaytonSims3](https://github.com/PaytonSims3), [@yu-zha](https://github.com/yu-zha), [@fchandoo](https://github.com/fchandoo), and [@jiacoba](https://github.com/jiacoba).
 
 Project Description:
   This will soon be a rough PKI infrastructure for out Cybersecurity class at EMU.
@@ -27,14 +27,14 @@ Run Instructions:
 
 Credits:
 
-  Sarah Yaw - base code. 
+  Sarah Yaw - Base code, Administrative tasks
   
-  [@bpurbancic](https://github.com/bpurbancic) - 
+  [@bpurbancic](https://github.com/bpurbancic) - Certificate Store
   
-  Payton S. - 
+  [@PaytonSims3](https://github.com/PaytonSims3) - Certificates 
   
-  Yu Z. - 
+  [@yu-zha](https://github.com/yu-zha) - Root Private Key
   
-  Fatema C. - 
+  [@fchandoo](https://github.com/fchandoo) - Certificate Policy
   
-  Jason I. - 
+  [@jiacoba](https://github.com/jiacoba) - Certificate Management
