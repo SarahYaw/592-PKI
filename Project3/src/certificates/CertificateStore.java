@@ -15,7 +15,7 @@ public class CertificateStore {
 	public static void main(String[] args) {
 		ArrayList<Certificate> certs = new ArrayList<Certificate>();
 		Certificate c1 = new Certificate();
-		Certificate c2 = new Certificate("Bob Smith", "Alg1", "These Params", "19d09baa34e");
+		Certificate c2 = new Certificate("Bob Smith", "DH", "These Params", "19d09baa34e");
 		c2.setEndDate("2021-10-13");
 		certs.add(c1);
 		certs.add(c2);
