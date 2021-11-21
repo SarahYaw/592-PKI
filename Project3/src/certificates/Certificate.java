@@ -1,7 +1,7 @@
 
 
 import java.util.*;
-
+import 
 
 /*
  EMU COSC 480/592
@@ -21,6 +21,9 @@ public class Certificate {
 	private String userAlg;
 	private String userParams;
 	private String userKey;
+	/*
+	 * Add invalid boolean
+	*/
 
 	// Instantiate Random to use in constructors
 	Random rand = new Random();
@@ -101,6 +104,8 @@ public class Certificate {
 		this.userKey = userKey;
 	}
 
+//	We will add other checks to the isValid method to conform with cert. policy
+	
 	public boolean isValid() {
 		if (this.getEndDate().equals("2099-12-31")) {
 			return true;

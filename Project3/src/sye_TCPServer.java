@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+
 public class sye_TCPServer
 {
     //initializing the server
@@ -93,7 +94,7 @@ public class sye_TCPServer
             // Create a server object
             servSock = new ServerSocket(port); 
             //opening port, setting up object, and running forever
-            System.out.println("Opening port...");
+            System.out.println("Port opened successfully...");
         }
         catch(IOException e)
         {
@@ -167,7 +168,16 @@ class ClientHandler extends Thread
             // Set up input and output streams for socket
             this.in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
             this.out = new PrintWriter(client.getOutputStream(),true); 
-
+			/*
+			ADD CERTIFICATE CHECK HERE
+			Re-enter user?
+			Enter key
+			Check end date, valid status
+			*/
+//            (String user, String userAlg, String userParams, String userKey)
+//            Certificate newCert = new Certificate(user, "DH", " ", "some_key");
+//            system.out.println(newCert);
+            
             //send G and N to client
             this.out.println("initializing...");
             this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
