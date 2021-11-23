@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class Certificate {
 	
+	
 	// Member variables based on the elements of the X.509 version 1 certificates
 	private String certNo; // Random int plus current date/time stamp
 	private Integer version; // Default sets this to 1
@@ -100,6 +101,24 @@ public class Certificate {
 			return false;
 	}
 
+	public String getCertNo() {
+		return certNo;
+	}
+	public void setCertNo(String certNo) {
+		this.certNo = certNo;
+	}
+	public Integer getVersion() {
+		return version;
+	}
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 	public String getEndDate() {
 		return endDate;
 	}

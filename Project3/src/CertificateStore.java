@@ -39,6 +39,23 @@ public class CertificateStore {
 		this.certs = certs;
 	}
 	
+	public void printAllCerts() {
+		System.out.println("\n**** Printing all Certificates ****\n");
+		for (Certificate c : this.getCerts()) {
+			System.out.println(c);
+		}
+		System.out.println();
+	}
+	
+	public void printCertSummaries() {
+	System.out.println("\n**** Printing Certificate Summaries ****\n");
+	
+		for (Certificate c : this.getCerts()) {
+			System.out.println(c.getCertNo() + " " + c.getUser());
+			
+		}
+		System.out.println();
+	}
 	/*
 	A method to check if the CertificateStore object contains a certificate by checking username and key pair.
 	then checking if the certificate is expired.
