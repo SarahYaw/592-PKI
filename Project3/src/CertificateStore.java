@@ -9,9 +9,6 @@ we will add the ability for users to request/create certificates and other funct
 */
 import java.util.ArrayList;
 
-import working.Certificate;
-
-
 public class CertificateStore {
 
 //	private ArrayList<Certificate> certs = new ArrayList<Certificate>();
