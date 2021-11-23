@@ -1,5 +1,6 @@
 
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import 
 
@@ -11,7 +12,7 @@ import
  As of now, it uses X.509 version 1
  */
 public class Certificate {
-
+	
 	// Member variables based on the elements of the X.509 version 1 certificates
 	private String certNo; // Random int plus current date/time stamp
 	private Integer version; // Default sets this to 1
@@ -23,7 +24,7 @@ public class Certificate {
 	private String userKey;
 	/*
 	 * Add invalid boolean
-	*/
+	 */
 
 	// Instantiate Random to use in constructors
 	Random rand = new Random();
@@ -41,12 +42,12 @@ public class Certificate {
 
 	}
 	// Constructor that takes user information
-	public Certificate(String user, String userAlg, String userParams, String userKey) {
+	public Certificate(String endDate, String user, String userAlg, String userParams, String userKey) {
 		Integer r1 = rand.nextInt(1000000000);
 		this.certNo = (r1.toString() + new Date()).replaceAll(" ","");
 		this.version = 1;
 		this.startDate = new Date();
-		this.endDate = "2099-12-31";
+		this.endDate = endDate;
 		this.user = user;
 		this.userAlg = userAlg;
 		this.userParams = userParams;
@@ -54,28 +55,56 @@ public class Certificate {
 	}
 
 	// For future use: when additional versions are included
-	public Certificate(Integer version, String user, String userAlg, String userParams, String userKey) {
+	public Certificate(Integer version, String endDate, String user, String userAlg, String userParams, String userKey) {
 		Integer r1 = rand.nextInt(1000000000);
 		this.certNo = (r1.toString() + new Date()).replaceAll(" ","");
 		this.version = version;
 		this.startDate = new Date();
-		this.endDate = "2099-12-31";
+		this.endDate = endDate;
 		this.user = user;
 		this.userAlg = userAlg;
 		this.userParams = userParams;
 		this.userKey = userKey;
 	}
 
-
-	public String getEndDate() {
-		return endDate;
-	}
 	@Override
 	public String toString() {
 		return "Certificate: certNo=" + certNo + "\nversion=" + version + "\nstartDate=" + startDate + "\nendDate="
 				+ endDate + "\nuser=" + user + "\nuserAlg=" + userAlg + "\nuserParams=" + userParams + "\nuserKey="
-				+ userKey + "\nValidity status: " + this.isValid() + "\n*************************************************************";
+				+ userKey + "\nValid Date: " + this.dateIsValid() + "\n*************************************************************";
 	}
+
+	/*
+	Checks that certificate isn't expired by confirming that end date is >= today.
+	For now, the date is a string. We can change it to a format in Date class if desired.
+	*/
+	public boolean dateIsValid() {
+		SimpleDateFormat ymd = new SimpleDateFormat("yyyy-MM-dd");
+		String currentYMD = new String(ymd.format(new Date())); 
+//		System.out.println("Printing YMD from dateIsValid: " + currentYMD);
+		if (this.getEndDate().compareTo(currentYMD) >= 0) {
+			return true;
+		}
+		System.out.println("Error: Expired certificate");
+		return false;
+	}
+
+	/*
+	 Method to check for "equality" of two certificates by confirming the same user, userKey.
+	 This method is called from contains() in CertificateStore to check if a certificate
+	 exists with the user and userKey parameters.
+	 */
+	public boolean userAndKeyMatch(String user, String userKey) {
+		if (this.user.equalsIgnoreCase(user) && this.userKey.equalsIgnoreCase(userKey))
+			return true;
+		else
+			return false;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
@@ -103,18 +132,5 @@ public class Certificate {
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
 	}
-
-//	We will add other checks to the isValid method to conform with cert. policy
-	
-	public boolean isValid() {
-		if (this.getEndDate().equals("2099-12-31")) {
-			return true;
-		}
-
-		return false;
-	}
-
-
-
 
 }
