@@ -1,11 +1,11 @@
 // Programmer: Sarah Yaw
 // Client program with added encryption
-// File name: sye_TCPClient.java
+// File name: TCPClient.java
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
-public class sye_TCPClient
+public class TCPClient
 {
     private static InetAddress host;
     private static String input="";
@@ -13,7 +13,7 @@ public class sye_TCPClient
     public static int G, N, myKey, serverKey, a;
     public static void main(String[] args)
     {
-        int port = 0;
+        int port = 20700;
         String user = "";
         boolean hasHost=false, hasPort=false, hasUser=false;
         int hostIndex=0, portIndex=0, userIndex=0; 
@@ -71,9 +71,7 @@ public class sye_TCPClient
                 }
                 else
                 {
-                    //port = 20700;
-                    System.out.println("Please enter a port");
-                    System.exit(0);
+                    System.out.println("Default port "+port+" used.");
                 }
                 
                 // Get username
@@ -221,7 +219,7 @@ class ServConsole extends Thread
     public void run()
     {
         // Receive data from the server
-        while(!sye_TCPClient.closing)
+        while(!TCPClient.closing)
         {
             try
             {
@@ -241,32 +239,32 @@ class ServConsole extends Thread
                     //System.out.println("initializing...");
                         response = fromServ.readLine();
                         String temp[] = response.split(" ");
-                        sye_TCPClient.G = Integer.parseInt(temp[1]); //g
-                        sye_TCPClient.N = Integer.parseInt(temp[3]); //n
-                        System.out.print("G: "+sye_TCPClient.G+"; N: "+sye_TCPClient.N);
+                        TCPClient.G = Integer.parseInt(temp[1]); //g
+                        TCPClient.N = Integer.parseInt(temp[3]); //n
+                        System.out.print("G: "+TCPClient.G+"; N: "+TCPClient.N);
 
-                        sye_TCPClient.a = (int)(Math.random()*100)+100; //a
-                        sye_TCPClient.myKey = 1;
-                        for (int i = 0; i<sye_TCPClient.a; i++)
+                        TCPClient.a = (int)(Math.random()*100)+100; //a
+                        TCPClient.myKey = 1;
+                        for (int i = 0; i<TCPClient.a; i++)
                         {
-                            sye_TCPClient.myKey = (sye_TCPClient.G * sye_TCPClient.myKey)%sye_TCPClient.N;
+                            TCPClient.myKey = (TCPClient.G * TCPClient.myKey)%TCPClient.N;
                         }
-                        UserServer.toServ.println(sye_TCPClient.myKey);//Ak
+                        UserServer.toServ.println(TCPClient.myKey);//Ak
                         UserServer.toServ.flush();
 
                         response = fromServ.readLine();
-                        sye_TCPClient.serverKey = Integer.parseInt(response); //Bk
+                        TCPClient.serverKey = Integer.parseInt(response); //Bk
 
                         response = fromServ.readLine();//SkB
 
-                        sye_TCPClient.myKey = 1;
+                        TCPClient.myKey = 1;
                         for (int i = 0; i<sye_TCPClient.a; i++)
                         {
-                            sye_TCPClient.myKey = (sye_TCPClient.serverKey * sye_TCPClient.myKey)%sye_TCPClient.N; //SkA
+                            TCPClient.myKey = (TCPClient.serverKey * TCPClient.myKey)%TCPClient.N; //SkA
                         }
-                        System.out.print("; Session-Key: "+sye_TCPClient.myKey);
+                        System.out.print("; Session-Key: "+TCPClient.myKey);
 
-                        padd = String.format("%8s",Integer.toBinaryString(sye_TCPClient.myKey & 255)).replace(' ', '0');
+                        padd = String.format("%8s",Integer.toBinaryString(TCPClient.myKey & 255)).replace(' ', '0');
                         System.out.println("; padd: "+padd);    
 
                         System.out.print("Enter message: ");
