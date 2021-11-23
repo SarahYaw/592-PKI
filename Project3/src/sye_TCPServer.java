@@ -193,6 +193,7 @@ class ClientHandler extends Thread
 			/*
 			 * Add a loop here to re-enter user, key? Reject after x entries?
 			 * Obviously, don't start the session if cert info isn't validated.
+			 * Per Sarah, call this.client.close() to end client session.
 			 */
 
 			//send G and N to client
