@@ -191,8 +191,13 @@ class ClientHandler extends Thread
 				System.out.println("Certificate is invalid.");
 			}
 			/*
-			 * Add a loop here to re-enter user, key? Reject after x entries?
+			 * Client only gets one chance to enter valid user, key.
 			 * Obviously, don't start the session if cert info isn't validated.
+			 * To send msg to client:
+			 *    this.out.println(encrypt(“Invalid cert”, this.padd));
+			 *    this.out.flush();
+			 *
+			 * Per Sarah, call this.client.close() to end client session.
 			 */
 
 			//send G and N to client

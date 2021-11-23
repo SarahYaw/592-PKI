@@ -9,6 +9,7 @@ import java.util.*;
  This class simulates the role of the certification authority by instantiating
  and authenticating certificates.
  As of now, it uses X.509 version 1
+ ==> WE will edit the certificate to match policy, eg set expiration date 60 days after creation date.
  */
 public class Certificate {
 	
