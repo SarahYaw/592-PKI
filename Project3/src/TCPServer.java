@@ -1,7 +1,7 @@
 
 
 // Multi-threaded Server program with added encryption
-// File name: sye_TCPServer.java
+// File name: TCPServer.java
 // Programmer: Sarah Yaw
 
 import java.io.*;
@@ -9,7 +9,7 @@ import java.net.*;
 import java.util.*;
 
 
-public class sye_TCPServer
+public class TCPServer
 {
 	//initializing the server
 	private static ServerSocket servSock;
@@ -22,88 +22,69 @@ public class sye_TCPServer
 	public static int count, G, N, port, gIndex, portIndex, nIndex, numMessages = 0, clientKey, b;
 	public static void main(String[] args)
 	{
-		try
-		{
-			if(args.length>0)
-			{
-				//check to see what command is input by user
-				for(int i=0; i<args.length;i++)
-				{
-					if(args[i]==null)
-						input=input+args[i];
-					else
-						input = input+args[i]+" ";
-					if(args[i].equals("-g"))
-					{
-						hasG=true;
-						gIndex = i+1;
-					}
-					if(args[i].equals("-p"))
-					{
-						hasPort=true;
-						portIndex = i+1;
-					}
-					if(args[i].equals("-n"))
-					{
-						hasN=true;
-						nIndex = i+1;
-					}
-					//if there is an invalid command
-					if(!args[i].equals("-g")&&!args[i].equals("-p")&&!args[i].equals("-n")&&args[i].charAt(0)=='-')
-					{
-						System.out.println("Invalid command "+args[i]);
-						System.exit(0);
-					} 
-				}
+        try
+        {
+            if(args.length>0)
+            {
+                //check to see what command is input by user
+                for(int i=0; i<args.length;i++)
+                {
+                    if(args[i]==null)
+                        input=input+args[i];
+                    else
+                        input = input+args[i]+" ";
+                    if(args[i].equals("-g"))
+                    {
+                        hasG=true;
+                        gIndex = i+1;
+                    }
+                    if(args[i].equals("-p"))
+                    {
+                        hasPort=true;
+                        portIndex = i+1;
+                    }
+                    if(args[i].equals("-n"))
+                    {
+                        hasN=true;
+                        nIndex = i+1;
+                    }
+                    //if there is an invalid command
+                    if(!args[i].equals("-g")&&!args[i].equals("-p")&&!args[i].equals("-n")&&args[i].charAt(0)=='-')
+                    {
+                        System.out.println("Invalid command "+args[i]);
+                        System.exit(0);
+                    } 
+                }
+                    
+                // Get server IP-address
+                if(hasG)
+                {
+                    G = Integer.parseInt(args[gIndex]);
+                }
 
-				// Get server IP-address
-				if(hasG)
-				{
-					G = Integer.parseInt(args[gIndex]);
-				}
-				else
-				{
-					G = 1019;
-				}
-
-
-				//Get Port
-				if(hasPort)
-				{
-					port = Integer.parseInt(args[portIndex]);
-				}
-				else
-				{
-					//port = 20700;
-					System.out.println("Please enter a port");
-					System.exit(0);
-				}
-
-				// Get username
-				if(hasN)
-				{
-					N = Integer.parseInt(args[nIndex]);
-				}
-				else
-				{
-					N = 1823;
-				}
-			}
-			else if (args.length==0) //if the command line is left empty of arguments aside from running the client
-			{
-				System.out.println("Please enter the port");
-				System.exit(0);
-			}
-			// Create a server object
-			servSock = new ServerSocket(port); 
-			//opening port, setting up object, and running forever
-			System.out.println("Port opened successfully...");
-		}
-		catch(IOException e)
-		{
-			System.out.println("Unable to attach to port!");
-			System.exit(1);
-		}
+                //Get Port
+                if(hasPort)
+                {
+                    port = Integer.parseInt(args[portIndex]);
+                }
+                
+                // Get username
+                if(hasN)
+                {
+                    N = Integer.parseInt(args[nIndex]);
+                }
+            }
+            
+            // Create a server object
+            servSock = new ServerSocket(port); 
+            //opening port, setting up object, and running forever
+            System.out.println("Opening on port "+port+"...");
+        }
+        catch(IOException e)
+        {
+            System.out.println("Unable to attach to port "+port+"!");
+            System.exit(1);
+        }
 		do { run(); }while (true);
 	}
 
@@ -121,7 +102,7 @@ public class sye_TCPServer
 			{
 				chatLog = new File("sy_chat.txt");
 				chatLog.createNewFile();
-				sye_TCPServer.log = new FileWriter("sy_chat.txt");
+				TCPServer.log = new FileWriter("sy_chat.txt");
 			}
 
 			// Set up input and output streams for socket
@@ -166,8 +147,8 @@ class ClientHandler extends Thread
 		// set up the socket
 		client = s;
 		user = name;
-		this.index=sye_TCPServer.count;
-		sye_TCPServer.count++;
+		this.index=TCPServer.count;
+		TCPServer.count++;
 		lock = new Object();
 
 		//start the timer
@@ -202,25 +183,25 @@ class ClientHandler extends Thread
 
 			//send G and N to client
 			this.out.println("initializing...");
-			this.out.println("G: "+sye_TCPServer.G+" N: "+sye_TCPServer.N); //g n
+			this.out.println("G: "+TCPServer.G+" N: "+TCPServer.N); //g n
 			this.out.flush();
-			System.out.print("G: "+sye_TCPServer.G+"; N: "+sye_TCPServer.N);
+			System.out.print("G: "+TCPServer.G+"; N: "+TCPServer.N);
 
 			int clientKey = Integer.parseInt(this.in.readLine()); //Ak 
 
-			sye_TCPServer.b = (int)(Math.random()*100)+100; //b
+			TCPServer.b = (int)(Math.random()*100)+100; //b
 			myKey = 1;
-			for (int i = 0; i<sye_TCPServer.b; i++)
+			for (int i = 0; i<TCPServer.b; i++)
 			{
-				myKey = (sye_TCPServer.G * myKey)%sye_TCPServer.N; //Bk
+				myKey = (TCPServer.G * myKey)%TCPServer.N; //Bk
 			} 
 			this.out.println(myKey);
 			this.out.flush();
 
 			myKey = 1;
-			for (int i = 0; i<sye_TCPServer.b; i++)
+			for (int i = 0; i<TCPServer.b; i++)
 			{
-				myKey = (clientKey * myKey)%sye_TCPServer.N; //SKB
+				myKey = (clientKey * myKey)%TCPServer.N; //SKB
 			}
 			System.out.print("; Session-Key: "+myKey);
 			this.out.println(myKey);
@@ -268,7 +249,7 @@ class ClientHandler extends Thread
 		try
 		{
 			//output backlog of chat to new joins
-			backlog = new Scanner(sye_TCPServer.chatLog);
+			backlog = new Scanner(TCPServer.chatLog);
 			String log;
 			while(backlog.hasNextLine())
 			{
@@ -279,9 +260,9 @@ class ClientHandler extends Thread
 			}   
 
 			//join announcement to others
-			for(int i=0; i<sye_TCPServer.arr.size();i++)
+			for(int i=0; i<TCPServer.arr.size();i++)
 			{
-				ClientHandler temp = sye_TCPServer.arr.get(i);
+				ClientHandler temp = TCPServer.arr.get(i);
 				if(temp.index!=this.index)
 				{
 					//encrypt
@@ -305,7 +286,7 @@ class ClientHandler extends Thread
 			while (!message.equals("DONE"))
 			{
 				message = user +": "+ message;
-				while(!sye_TCPServer.canUpdate)
+				while(!TCPServer.canUpdate)
 				{
 					//synchronization to prevent collisions between two clients posting at once
 					synchronized(this.lock)
@@ -317,21 +298,21 @@ class ClientHandler extends Thread
 						catch(Exception e){System.out.println(e);}
 					}   
 				}
-				sye_TCPServer.canUpdate=false;   
+				TCPServer.canUpdate=false;   
 				System.out.println(message);
-				sye_TCPServer.log.write(message+"\n");
-				sye_TCPServer.log.flush();
-				sye_TCPServer.numMessages ++;
+				TCPServer.log.write(message+"\n");
+				TCPServer.log.flush();
+				TCPServer.numMessages ++;
 
 				//end of synchronization
-				sye_TCPServer.canUpdate=true;
+				TCPServer.canUpdate=true;
 				synchronized(this.lock){this.lock.notifyAll();}
 
 				//cycle and broadcast input to !this.out
-				for(int i=0; i<sye_TCPServer.arr.size();i++)
+				for(int i=0; i<TCPServer.arr.size();i++)
 				{
 
-					ClientHandler temp = sye_TCPServer.arr.get(i);
+					ClientHandler temp = TCPServer.arr.get(i);
 					if(temp.index!=this.index)
 					{
 						//encrypt
@@ -354,7 +335,7 @@ class ClientHandler extends Thread
 			// Send a report back and close the connection
 			this.out.println(encrypt("--Information Received From the Server--", this.padd));
 			this.out.flush();
-			Scanner file = new Scanner(sye_TCPServer.chatLog);
+			Scanner file = new Scanner(TCPServer.chatLog);
 			while(file.hasNextLine())
 			{
 				message = file.nextLine();
@@ -363,7 +344,7 @@ class ClientHandler extends Thread
 				this.out.flush();
 			}
 			//encrypt
-			this.out.println(encrypt("Server received " + sye_TCPServer.numMessages + " messages total", this.padd));
+			this.out.println(encrypt("Server received " + TCPServer.numMessages + " messages total", this.padd));
 			this.out.flush();
 
 			//get the end value of timer
@@ -381,9 +362,9 @@ class ClientHandler extends Thread
 			this.out.flush();
 
 			//departure announcement to remaining clients
-			for(int i=0; i<sye_TCPServer.arr.size();i++)
+			for(int i=0; i<TCPServer.arr.size();i++)
 			{
-				ClientHandler temp = sye_TCPServer.arr.get(i);
+				ClientHandler temp = TCPServer.arr.get(i);
 				if(temp.index!=this.index)
 				{
 					//encrypt
@@ -394,16 +375,16 @@ class ClientHandler extends Thread
 			System.out.println(this.user+" has left the chat.");
 
 			//actual departure from server and arrayList
-			sye_TCPServer.arr.remove(sye_TCPServer.arr.indexOf(this));
-			sye_TCPServer.count--;
+			TCPServer.arr.remove(TCPServer.arr.indexOf(this));
+			TCPServer.count--;
 
-			if(sye_TCPServer.arr.isEmpty())
+			if(TCPServer.arr.isEmpty())
 			{
 				System.out.println("Server is empty, clearing logs...");    
 				//debugging statement but I like it there^
 				out.close();
 				file.close();
-				sye_TCPServer.chatLog.delete();
+				TCPServer.chatLog.delete();
 			}
 
 		}
@@ -412,11 +393,11 @@ class ClientHandler extends Thread
 		{
 			try
 			{
-				sye_TCPServer.log.write(this.user+" has left the chat.\n");
+				TCPServer.log.write(this.user+" has left the chat.\n");
 				//departure notification placed in chatlog
-				sye_TCPServer.log.flush();
-				if(sye_TCPServer.arr.isEmpty()) //if server is empty then delete the chatlog
-					sye_TCPServer.log.close();
+				TCPServer.log.flush();
+				if(TCPServer.arr.isEmpty()) //if server is empty then delete the chatlog
+					TCPServer.log.close();
 				this.client.close(); 
 			}
 			catch(IOException e)
