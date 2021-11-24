@@ -22,69 +22,69 @@ public class TCPServer
 	public static int count, G, N, port, gIndex, portIndex, nIndex, numMessages = 0, clientKey, b;
 	public static void main(String[] args)
 	{
-        try
-        {
-            if(args.length>0)
-            {
-                //check to see what command is input by user
-                for(int i=0; i<args.length;i++)
-                {
-                    if(args[i]==null)
-                        input=input+args[i];
-                    else
-                        input = input+args[i]+" ";
-                    if(args[i].equals("-g"))
-                    {
-                        hasG=true;
-                        gIndex = i+1;
-                    }
-                    if(args[i].equals("-p"))
-                    {
-                        hasPort=true;
-                        portIndex = i+1;
-                    }
-                    if(args[i].equals("-n"))
-                    {
-                        hasN=true;
-                        nIndex = i+1;
-                    }
-                    //if there is an invalid command
-                    if(!args[i].equals("-g")&&!args[i].equals("-p")&&!args[i].equals("-n")&&args[i].charAt(0)=='-')
-                    {
-                        System.out.println("Invalid command "+args[i]);
-                        System.exit(0);
-                    } 
-                }
-                    
-                // Get server IP-address
-                if(hasG)
-                {
-                    G = Integer.parseInt(args[gIndex]);
-                }
+		try
+		{
+			if(args.length>0)
+			{
+				//check to see what command is input by user
+				for(int i=0; i<args.length;i++)
+				{
+					if(args[i]==null)
+						input=input+args[i];
+					else
+						input = input+args[i]+" ";
+					if(args[i].equals("-g"))
+					{
+						hasG=true;
+						gIndex = i+1;
+					}
+					if(args[i].equals("-p"))
+					{
+						hasPort=true;
+						portIndex = i+1;
+					}
+					if(args[i].equals("-n"))
+					{
+						hasN=true;
+						nIndex = i+1;
+					}
+					//if there is an invalid command
+					if(!args[i].equals("-g")&&!args[i].equals("-p")&&!args[i].equals("-n")&&args[i].charAt(0)=='-')
+					{
+						System.out.println("Invalid command "+args[i]);
+						System.exit(0);
+					} 
+				}
 
-                //Get Port
-                if(hasPort)
-                {
-                    port = Integer.parseInt(args[portIndex]);
-                }
-                
-                // Get username
-                if(hasN)
-                {
-                    N = Integer.parseInt(args[nIndex]);
-                }
-            }
-            
-            // Create a server object
-            servSock = new ServerSocket(port); 
-            //opening port, setting up object, and running forever
-            System.out.println("Opening on port "+port+"...");
-        }
-        catch(IOException e)
-        {
-            System.out.println("Unable to attach to port "+port+"!");
-            System.exit(1);
-        }
+				// Get server IP-address
+				if(hasG)
+				{
+					G = Integer.parseInt(args[gIndex]);
+				}
+
+				//Get Port
+				if(hasPort)
+				{
+					port = Integer.parseInt(args[portIndex]);
+				}
+
+				// Get username
+				if(hasN)
+				{
+					N = Integer.parseInt(args[nIndex]);
+				}
+			}
+
+			// Create a server object
+			servSock = new ServerSocket(port); 
+			//opening port, setting up object, and running forever
+			System.out.println("Opening on port "+port+"...");
+		}
+		catch(IOException e)
+		{
+			System.out.println("Unable to attach to port "+port+"!");
+			System.exit(1);
+		}
 		do { run(); }while (true);
 	}
 
@@ -159,28 +159,24 @@ class ClientHandler extends Thread
 			this.in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
 			this.out = new PrintWriter(client.getOutputStream(),true); 
 			/* *BPU*
-			
+
 			Enter key
-			Contains methods checks for user, private key if present,it checeks for valid date
-			
-			*/
+			Contains methods checks for user, private key if present,it checks for valid date
+
+			 */
 			certStore.createStore();
 			if (certStore.contains(user, privateKey)) {
 				System.out.println("Certificate is valid. Session started.");
 			}
 			else {
 				System.out.println("Certificate is invalid.");
-				this.out.println(encrypt(“Invalid cert”, this.padd));
-			  	this.out.flush();
 				this.client.close();
 			}
 			/*
-			 * Client only gets one chance to enter valid user, key.
-			 * Obviously, don't start the session if cert info isn't validated.
-			 * To send msg to client:
-			 *    this.out.println(encrypt(“Invalid cert”, this.padd));
-			 *    this.out.flush();
-			 *
+			 * Client only gets one chance to enter valid user, key. Obviously, don't start
+			 * the session if cert info isn't validated. To send msg to client:
+			 * this.out.println(encrypt("Invalid cert", this.padd)); this.out.flush();
+			 * 
 			 * Per Sarah, call this.client.close() to end client session.
 			 */
 
@@ -226,7 +222,7 @@ class ClientHandler extends Thread
 		return output;
 	}
 
-	public String decrypt(String message, String pad)
+	public String decrypt(String message, String padd)
 	{
 		String inp="";
 		int parseInt;
@@ -236,7 +232,7 @@ class ClientHandler extends Thread
 		{
 			if(!temo[i].equals(""))
 			{
-				parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(pad,2);
+				parseInt = Integer.parseInt(temo[i]) ^ Integer.parseInt(padd,2);
 				c = (char)parseInt;
 				inp+=c;
 			}
@@ -274,8 +270,8 @@ class ClientHandler extends Thread
 				}
 			}
 			//join announcement in chatlog
-			sye_TCPServer.log.write(user + " has joined the chat!\n");
-			sye_TCPServer.log.flush();
+			TCPServer.log.write(user + " has joined the chat!\n");
+			TCPServer.log.flush();
 
 		}
 		catch(Exception e){System.out.println(e);}
