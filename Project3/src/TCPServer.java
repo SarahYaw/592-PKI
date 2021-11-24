@@ -159,17 +159,20 @@ class ClientHandler extends Thread
 			this.in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
 			this.out = new PrintWriter(client.getOutputStream(),true); 
 			/* *BPU*
-			ADD CERTIFICATE CHECK HERE
-			Re-enter user?
+			
 			Enter key
-			Check end date, valid status
-			 */
+			Contains methods checks for user, private key if present,it checeks for valid date
+			
+			*/
 			certStore.createStore();
 			if (certStore.contains(user, privateKey)) {
 				System.out.println("Certificate is valid. Session started.");
 			}
 			else {
 				System.out.println("Certificate is invalid.");
+				this.out.println(encrypt(“Invalid cert”, this.padd));
+			  	this.out.flush();
+				this.client.close();
 			}
 			/*
 			 * Client only gets one chance to enter valid user, key.
