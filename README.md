@@ -15,7 +15,7 @@ Project Description:
 3. Type "javac TCPServer.java" in the terminal and hit enter. This compiles the program and adds a file called TCPServer.class to your folder.
 	
 4. Type "java TCPServer" and type in the port then hit enter.
-	>Example: java TCPServer -p 20700
+	>Example: java TCPServer -p 20700 -g 2849 -n 381
 
 ### To connect as a client:
 	
