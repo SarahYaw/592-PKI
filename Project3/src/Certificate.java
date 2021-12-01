@@ -226,12 +226,12 @@ public class Certificate {
 		return userPublicKey;
 	}
 	
-	public static void main(String[] args) {
-		Certificate c = new Certificate("2021-12-31", "Brian", "DH", "These Params");
-		System.out.println(c);
-		System.out.println(c.encrypt("TopSecretRootPrivateKeyBrian"));
-		System.out.println(c.decrypt(c.getUserPublicKey()));
-	}
+//	public static void main(String[] args) {
+//		Certificate c = new Certificate("2021-12-31", "Brian", "DH", "These Params");
+//		System.out.println(c);
+//		System.out.println(c.encrypt("TopSecretRootPrivateKeyBrian"));
+//		System.out.println(c.decrypt(c.getUserPublicKey()));
+//	}
 
 
 }
