@@ -10,6 +10,8 @@ we will add the ability for users to request/create certificates and other funct
 import java.util.ArrayList;
 
 public class CertificateStore {
+	
+	private String rootPrivateKey = "TopSecretRootPrivateKeyShhh";
 
 //	private ArrayList<Certificate> certs = new ArrayList<Certificate>();
 	private ArrayList<Certificate> certs;
@@ -33,6 +35,10 @@ public class CertificateStore {
 
 	public ArrayList<Certificate> getCerts() {
 		return certs;
+	}
+	
+	public String getRootPrivateKey() {
+		return this.rootPrivateKey;
 	}
 
 	public void setCerts(ArrayList<Certificate> certs) {
