@@ -1,4 +1,4 @@
-
+package working;
 
 import java.util.ArrayList;
 
@@ -15,10 +15,12 @@ public class TestCertificates {
 //		System.out.println(cs.getCerts());
 
 //		Print all Certificates in certStore
-		System.out.println("\n**** Printing all Certificates ****\n");
-		for (Certificate c : cs.getCerts())
-			System.out.println(c);
+		cs.printAllCerts();
 		
+//		Print Certificate summaries
+		cs.printCertSummaries();
+		
+//		Create dummy user names and private keys to test validity check
 		String u1 = "Brian";
 		String k1 = "privateKey";
 		String u2 = "Brain";
@@ -33,6 +35,8 @@ public class TestCertificates {
 		System.out.println("User " + u3 + " with key " + k3 + " (true for valid; false for invalid):");
 		System.out.println(cs.contains(u3, k3));
 		
+
+
 	}
 
 }
