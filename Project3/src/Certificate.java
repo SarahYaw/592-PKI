@@ -23,6 +23,19 @@ public class Certificate {
 	private String userAlg;
 	private String userParams;
 	private String userKey;
+	
+	//ADD THE REMAINING VARIABLES SO THE VERSION 2 & 3 OF THE X.509 CERTIFICATE
+	//	ARE SHOWN (P.B.S)
+	private String IssUniqIdent;
+	private String SubUniqIdent;
+	
+	//private String extensions;   NOT NEEDED
+	
+	//SIGNATURE VARIABLES (P.B.S)
+	private String sigAlg;
+	private String sigParams;
+	private String sigEnHash;
+	
 	/*
 	 * Add invalid boolean
 	 */
@@ -39,7 +52,15 @@ public class Certificate {
 		this.user = "";
 		this.userAlg = "";
 		this.userParams = "";
-		this.userKey = "";
+		this.userKey = ""; 
+		//ADDED REMAINDER OF VARIABLES (P.B.S)
+		this.IssUniqIdent = "";
+		this.SubUniqIdent = "";
+		//SIGNATURE VARIABLES
+		this.sigAlg = "";
+		this.sigParams = "";
+		this.sigEnHash = "";
+	
 
 	}
 	// Constructor that takes user information
@@ -53,6 +74,16 @@ public class Certificate {
 		this.userAlg = userAlg;
 		this.userParams = userParams;
 		this.userKey = userKey;
+		//ADDED REMAINDER OF VARIABLES (P.B.S)
+		this.IssUniqIdent = IssUniqIdent;
+		this.SubUniqIdent = SubUniqIdent;
+		//SIGNATURE VARIABLES
+		this.sigAlg = sigAlg;
+		this.sigParams = sigParams;
+		this.sigEnHash = sigEnHash;
+	
+	
+	
 	}
 
 	// For future use: when additional versions are included
@@ -66,6 +97,14 @@ public class Certificate {
 		this.userAlg = userAlg;
 		this.userParams = userParams;
 		this.userKey = userKey;
+		//ADDED REMAINDER OF VARIABLES (P.B.S)
+		this.IssUniqIdent = IssUniqIdent;
+		this.SubUniqIdent = SubUniqIdent;
+		//SIGNATURE VARIABLES
+		this.sigAlg = sigAlg;
+		this.sigParams = sigParams;
+		this.sigEnHash = sigEnHash;
+	
 	}
 
 	@Override
