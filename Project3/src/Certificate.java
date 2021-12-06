@@ -173,8 +173,8 @@ public class Certificate {
 		if (decrypt(userPublicKey).substring(ROOTPRIVATEKEY.length()).compareToIgnoreCase(ROOTPRIVATEKEY) == 0)
 			return true;
 
-//		return false;
-		return true; // Return true to test *** BPU *** Change this to actually check for key
+		return false;
+//		return true; // Return true to test *** BPU *** Change this to actually check for key
 	}
 
 

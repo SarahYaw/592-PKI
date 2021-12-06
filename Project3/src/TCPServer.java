@@ -137,13 +137,14 @@ class ClientHandler extends Thread
 	public Object lock;
 	private static long start, finish;
 	private CertificateStore certStore = new CertificateStore();
+	private HashMap<String, String> userKeys;
 
 	public ClientHandler(Socket s, String name)
 
 
 	{
-		//      I've hard-coded the privateKey here. We will change this.
-		String privateKey = "privateKey";
+		
+		String publicKey;
 		// set up the socket
 		client = s;
 		user = name;
@@ -159,13 +160,16 @@ class ClientHandler extends Thread
 			this.in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
 			this.out = new PrintWriter(client.getOutputStream(),true); 
 			/* *BPU*
-
 			Enter key
 			validUserAndKey methods checks for user, private key if present,it checks for valid date
-
 			 */
 			certStore.createStore();
-			if (certStore.validUserAndKey(user, privateKey)) {
+			certStore.createUserAndKeyList();
+//			This list of users and keys is used in place of a local .env file with public keys
+			userKeys = certStore.getUserAndKeyList();
+			// Echoing below to troubleshoot
+			// System.out.println("User, key:" + user + "," + userKeys.get(user));
+			if (certStore.validUserAndKey(user, userKeys.get(user))) {
 				System.out.println("Certificate is valid. Session started.");
 			}
 			else {
