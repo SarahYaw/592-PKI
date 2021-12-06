@@ -31,7 +31,7 @@ public class Certificate {
 	private String certNo; // Random int plus current date/time stamp
 	private Integer version; // Default sets this to 1
 	private Date startDate; // Default sets to time of instantiation
-	private String endDate; // Default sets this to 12/31/2099
+	private String endDate; // Default sets this to 2022-01-31
 	private String user; 
 	private String userAlg;
 	private String userParams;
@@ -48,7 +48,7 @@ public class Certificate {
 		this.certNo = (r1.toString() + new Date()).replaceAll(" ","");
 		this.version = 1;
 		this.startDate = new Date();
-		this.endDate = "2099-12-31";  // For now end date is a string
+		this.endDate = "2022-01-31";  // For now end date is a string
 		this.user = "";
 		this.userAlg = "";
 		this.userParams = "";

@@ -142,7 +142,7 @@ class ClientHandler extends Thread
 
 
 	{
-		//      I've hard-coded the privateKey here but we will probably add it to ClientHandler *BPU*
+		//      I've hard-coded the privateKey here. We will 
 		String privateKey = "privateKey";
 		// set up the socket
 		client = s;
