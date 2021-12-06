@@ -27,7 +27,7 @@ public class Certificate {
 
 	private static final String ROOTPRIVATEKEY = "TopSecretRootPrivateKey";
 	private static final String SALT = "ssshhhhhhhhhhh!!!!";
-	// Member variables based on the elements of the X.509 version 1 certificates
+	// First 8 Member variables based on the elements of the X.509 version 1 certificates
 	private String certNo; // Random int plus current date/time stamp
 	private Integer version; // Default sets this to 1
 	private Date startDate; // Default sets to time of instantiation
@@ -48,7 +48,8 @@ public class Certificate {
 	private String sigParams;
 	private String sigEnHash;
 	/*
-	 * Add invalid boolean
+	 * Note: instead of a single "invalid" boolean variable, we have 2 methods to check if
+	 * the date is valid and if the user and key match.
 	 */
 
 	// Instantiate Random to use in constructors
