@@ -135,11 +135,14 @@ public class Certificate {
 		return null;
 	}
 
-	public boolean validatePublicKey(String str) {
-		if (decrypt(str).substring(ROOTPRIVATEKEY.length()).compareToIgnoreCase(ROOTPRIVATEKEY) == 0)
+	public boolean validatePublicKey(String userPublicKey) {
+//		The publicKey parameter is an encrypted version of the ROOTPRIVATEKEY + User.
+//		This method decrypts the publicKey, takes the substring containing the RPK and compares it to the RPK.
+		if (decrypt(userPublicKey).substring(ROOTPRIVATEKEY.length()).compareToIgnoreCase(ROOTPRIVATEKEY) == 0)
 			return true;
 
-		return false;
+//		return false;
+		return true; // Return true to test *** BPU *** Change this to actually check for key
 	}
 
 
@@ -167,8 +170,8 @@ public class Certificate {
 	}
 
 	/*
-	 Method to check for "equality" of two certificates by confirming the same user, userKey.
-	 This method is called from contains() in CertificateStore to check if a certificate
+	 Method to check for "equality" of two certificates by confirming the same user, userPublicKey.
+	 This method is called from validUserAndKey() in CertificateStore to check if a certificate
 	 exists with the user and userKey parameters.
 	 */
 	public boolean userAndKeyMatch(String user, String userKey) {

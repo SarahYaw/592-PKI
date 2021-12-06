@@ -65,10 +65,10 @@ public class CertificateStore {
 	A method to check if the CertificateStore object contains a certificate by checking username and key pair.
 	then checking if the certificate is expired.
 	*/
-	public boolean contains(String user, String userKey) {
+	public boolean validUserAndKey(String user, String userPublicKey) {
 		
 		for (Certificate c : this.certs) {
-			if (c.userAndKeyMatch(user, userKey)) {
+			if (c.userAndKeyMatch(user, userPublicKey)) {
 				
 				return(c.dateIsValid() && c.validatePublicKey(c.getUserPublicKey()));
 			}		

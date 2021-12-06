@@ -142,7 +142,7 @@ class ClientHandler extends Thread
 
 
 	{
-		//      I've hard-coded the privateKey here. We will 
+		//      I've hard-coded the privateKey here. We will change this.
 		String privateKey = "privateKey";
 		// set up the socket
 		client = s;
@@ -161,11 +161,11 @@ class ClientHandler extends Thread
 			/* *BPU*
 
 			Enter key
-			Contains methods checks for user, private key if present,it checks for valid date
+			validUserAndKey methods checks for user, private key if present,it checks for valid date
 
 			 */
 			certStore.createStore();
-			if (certStore.contains(user, privateKey)) {
+			if (certStore.validUserAndKey(user, privateKey)) {
 				System.out.println("Certificate is valid. Session started.");
 			}
 			else {
