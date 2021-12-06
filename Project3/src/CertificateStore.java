@@ -24,12 +24,12 @@ public class CertificateStore {
 	
 	public void createStore() {
 //		All certificates but Brain are valid with an ultra super top secret private key: "privateKey"
-		this.certs.add(new Certificate("2021-12-31", "Brian", "DH", "These Params"));
-		this.certs.add(new Certificate("2021-01-01", "Brain", "DH", "These Params"));
-		this.certs.add(new Certificate("2021-12-31", "Sarah", "DH", "These Params"));
-		this.certs.add(new Certificate("2021-12-31", "Payton", "DH", "These Params"));
-		this.certs.add(new Certificate("2021-12-31", "Fatema", "DH", "These Params"));
-		this.certs.add(new Certificate("2021-12-31", "Yu", "DH", "These Params"));
+		this.certs.add(new Certificate("2021-12-31", "Brian", "DH", "-g 2849 -n 381"));
+		this.certs.add(new Certificate("2021-01-01", "Brain", "DH", "-g 2849 -n 381"));
+		this.certs.add(new Certificate("2021-12-31", "Sarah", "DH", "-g 2849 -n 381"));
+		this.certs.add(new Certificate("2021-12-31", "Payton", "DH", "-g 2849 -n 381"));
+		this.certs.add(new Certificate("2021-12-31", "Fatema", "DH", "-g 2849 -n 381"));
+		this.certs.add(new Certificate("2021-12-31", "Yu", "DH", "-g 2849 -n 381"));
 		
 	}
 	
@@ -73,9 +73,10 @@ public class CertificateStore {
 				return(c.dateIsValid() && c.validatePublicKey(c.getUserPublicKey()));
 			}		
 		}
-		System.out.println("Error: No match for user and key found.");
 		
-		return false;
+		System.out.println("Error: No match for user and key found.");
+		return true;
+//		return false;  // Temporarily commented out to test *** BPU ***
 	}
 
 

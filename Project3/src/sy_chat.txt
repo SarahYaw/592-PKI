@@ -1,2 +1,9 @@
 Brian has joined the chat!
+Brian: Hello
+Brian: Hello
+Sarah has joined the chat!
+Sarah: Yo
+Brian: What up
+Sarah: Not much
+Sarah has left the chat.
 Brian has left the chat.
