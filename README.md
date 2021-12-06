@@ -27,7 +27,7 @@ Project Description:
 7. Type "javac TCPClient.java" in the terminal and hit enter. This compiles the program and adds a file called TCPClient.class to your folder.
 	
 8. Type "java TCPClient" and type in the credentials required. These include the host, port number, and username. Each of these three are optional, but you will be prompted to type in the username if you do not include it here. Each of these values needs a key to be recognized as well. -h for host, -p for port, and -u for user. If an incorrect key is used, the program will complain and terminate.
-	>Example: java TCPClient -h hostName -u userName -p portName
+	>Example: java TCPClient -h localhost -u userName -p 20700
 	
 9. You are now connected to the server and should be able to interact with it. Send whatever messages you want by typing them in and hitting enter to send.
 	
