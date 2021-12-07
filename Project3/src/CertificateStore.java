@@ -3,9 +3,15 @@
 /*
 EMU COSC 480/592
 PKI Project
-This class holds an arraylist of all certificates.
-Initially, we will hard code certificates for the group members using the constructor.
-Later, we can add file IO capabilities to store & retrieve certificates.
+The CertificateStore simulates the role of both the certificate authority and the certificate issuer.
+It creates a series of certificates using the 4-parameter Certificate constructor: expiration date, 
+user, algorithm (DH for Diffie Hellman), and algorithm parameters.
+These certificates are added to an ArrayList which is accessed by the Server class.
+The users and public keys are added to a HashMap which is accessed by the Server class in a separate
+method.
+To check the validity of a certificate, the Server class only has to call the validUserAndKey method 
+from the CertificateStore which calls another method from the Certificate class to matches up user names, keys,
+and checks dates.
  */
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +29,9 @@ public class CertificateStore {
 	}
 
 	public void createStore() {
-		//		All certificates but Brain are valid except "Brain" which is expired
+		//All certificates below are valid except for user "Brain" which is expired.
+		//If Brain tries to join the chat he will be rejected.
+		//Any user who is not on this list will be rejected as invalid.
 		this.certs.add(new Certificate("2021-12-31", "Brian", "DH", "-g 2849 -n 381"));
 		this.certs.add(new Certificate("2021-01-01", "Brain", "DH", "-g 2849 -n 381"));
 		this.certs.add(new Certificate("2021-12-31", "Sarah", "DH", "-g 2849 -n 381"));
