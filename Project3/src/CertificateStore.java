@@ -81,8 +81,8 @@ public class CertificateStore {
 	public boolean validUserAndKey(String user, String userPublicKey) {
 
 		for (Certificate c : this.certs) {
-			System.out.println("Printing c in validUserAndKey from CertificateStore:");
-			System.out.println(c);
+			//System.out.println("Printing c in validUserAndKey from CertificateStore:");
+			//System.out.println(c);
 			if (c.userAndKeyMatch(user, userPublicKey)) {
 				
 				return(c.dateIsValid());
