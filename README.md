@@ -1,10 +1,8 @@
 
 Creators: Sarah Yaw, [@bpurbancic](https://github.com/bpurbancic), [@PaytonSims3](https://github.com/PaytonSims3), [@yu-zha](https://github.com/yu-zha), and [@fchandoo](https://github.com/fchandoo).
 
-NOTE: We will make all changes to the working repo and branches off of it. These changes will be merged into master after group review.
-
 Project Description:
-  This will soon be a rough PKI infrastructure for out Cybersecurity class at EMU.
+  This is a rough PKI infrastructure for out Cybersecurity class at EMU.
 ## Run Instructions:
 
 1. Open up the terminal window.
